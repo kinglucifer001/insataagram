@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create GitHub Gist</title>
+</head>
+<body>
+    <h1>Create a New GitHub Gist</h1>
+    <textarea id="gist-content" rows="10" cols="50"></textarea><br>
+    <button id="create-gist">Create Gist</button>
+    
+    <script>
+        const createGistButton = document.getElementById("create-gist");
+        const gistContent = document.getElementById("gist-content");
+
+        createGistButton.addEventListener("click", createGist);
+
+        function createGist() {
+            const token = "YOUR_GITHUB_ACCESS_TOKEN"; // Replace with your GitHub access token
+            const content = gistContent.value;
+
+            const gistData = {
+                description: "My New Gist",
+                public: true,
+                files: {
+                    "my-gist.txt": {
+                        content: content
+                    }
+                }
+            };
+
+            fetch("https://api.github.com/gists", {
+                method: "POST",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(gistData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Gist created:", data.html_url);
+                window.location.href = data.html_url; // Redirect to the newly created Gist
+            })
+            .catch(error => {
+                console.error("Error creating Gist:", error);
+            });
+        }
+    </script>
+</body>
+</html>
